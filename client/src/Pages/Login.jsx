@@ -1,4 +1,4 @@
-import React, {useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import Styles from "../Styles/Pages/Register.module.css"
 import {Link, useNavigate} from "react-router-dom"
 import logo from "../Assets/logo2.png"
@@ -47,6 +47,11 @@ const handleValidation = () =>{
     setValues({...values, [event.target.name]: event.target.value})
   }
 
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      navigate("/chat")
+    }
+  }, [navigate])
   
   return (
     <>
