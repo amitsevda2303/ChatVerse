@@ -37,28 +37,34 @@ const SetAvatar = () => {
    
     try {
         
-    if (!localStorage.getItem('avatars')) {
+    if (!localStorage.getItem('user')) {
         return navigate('/login')       
     }
       const { data } = await axios.post(setAvatarRoute, {
         username: user.username ,
         avatar: avatars,
       });
+      console.log(data)
       if (data.status === true) {
+        localStorage.removeItem('user');
+        
+        localStorage.setItem("user", JSON.stringify(data.updatedUser));
         toast.success("Avatar saved successfully");
       }
+      navigate("/")
       if (data.status === false) {
         toast.success("Sorry some error Occured");
       }
+      navigate("/login")
     } catch (err) {
       toast.error(err.message);
     }
   };
   useEffect(() => {
-    if (!user) {
+    if (!localStorage.getItem('user')) {
         navigate("/login")        
     }
-  }, [user,navigate])
+  }, [navigate])
   
 
   return (

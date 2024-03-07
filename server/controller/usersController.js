@@ -71,3 +71,20 @@ module.exports.setavatar  = async(req, res,next) => {
         next(error)
     }
 }
+
+
+
+module.exports.allusers = async(req,res,next) =>{
+    try {
+        const users = await User.find({username: {$ne: req.params.username}}).select([
+            "email",
+            "username",
+            "avatarImage",
+            "_id"
+        ])
+        return res.json(users)
+        
+    } catch (ex) {
+        next(ex)
+    }
+}
