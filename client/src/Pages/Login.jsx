@@ -49,7 +49,7 @@ const handleValidation = () =>{
 
   useEffect(() => {
     if (localStorage.getItem("user")) {
-      navigate("/chat")
+      navigate("/")
     }
   }, [navigate])
   

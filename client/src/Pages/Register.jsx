@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Styles from "../Styles/Pages/Register.module.css"
 import {Link, useNavigate} from "react-router-dom"
 import logo from "../Assets/logo2.png"
@@ -7,12 +7,11 @@ import "react-toastify/dist/ReactToastify.css"
 import {toastOptions} from "../Utils/Toastoptions"
 import axios from "axios"
 import { registerRoute } from '../Utils/ApiRoutes'
-import { MyContext } from '../Context/MyContext'
 
 const Register = () => {
   const navigate = useNavigate()
-  const {username} = useContext(MyContext)
   const [values, setValues] = useState({
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -20,7 +19,7 @@ const Register = () => {
   const handleSubmit = async(event) =>{
     event.preventDefault();
     if(handleValidation()){
-      const {password,email} = values
+      const {password,email,username} = values
     
       const {data} = await axios.post(registerRoute,{
         username,password,email,
@@ -61,7 +60,7 @@ const handleValidation = () =>{
 
   useEffect(() => {
     if (localStorage.getItem("user")) {
-      navigate("/chat")
+      navigate("/")
     }
   }, [navigate])
   

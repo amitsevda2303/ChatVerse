@@ -19,7 +19,7 @@ module.exports.register = async (req, res, next) => {
         const user = await User.create({
             username: username,
             email: email,
-            password: hashedPassword
+            password: hashedPassword,
         })
         delete user.password
         return res.json({ status: true, user })
@@ -48,5 +48,26 @@ module.exports.login = async (req, res, next) => {
     }
     catch (ex) {
         next(ex)
+    }
+}
+
+module.exports.setavatar  = async(req, res,next) => {
+    try {
+        const {username,avatar} = req.body;
+    if (!username || !avatar) {
+        return res.json({ message: 'Missing required fields',status: false });
+      }
+  
+      const updatedUser = await User.findOneAndUpdate(
+        { username },
+        { $set: { avatarImage: avatar, isAvatarImagesSet: true } },
+        { new: true }
+      );
+      if (!updatedUser) {
+        return res.json({ message: 'User not found', status: false});
+      }
+      res.json({ message: 'Avatar updated successfully', updatedUser , status: true});
+    } catch (error) {
+        next(error)
     }
 }

@@ -1,29 +1,89 @@
-import React, { useState } from 'react'
-import Loader from "../Assets/loader.gif"
+import React, { useState, useEffect } from "react";
+import loader from "../Assets/loader.gif";
+import {useNavigate} from "react-router-dom"
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Styles from "../Styles/Pages/SetAvatar.module.css";
+import { setAvatarRoute } from "../Utils/ApiRoutes";
+import axios from "axios";
 
 const SetAvatar = () => {
-const [avatarName, setavatarName] = useState("Enter your name")
-const [loader,setLoader] = useState(false)
-const [imageurl,setimageurl] = useState("")
-    const fetchAvatar = async() =>{
-        setLoader(true)
-        const avatar = await fetch(`https://api.multiavatar.com/${avatarName}.png`)
-        const result = avatar.url
-        setimageurl(result)
-        console.log(result)
-        setLoader(false)        
+    const user = JSON.parse(localStorage.getItem("user"));
+    const navigate = useNavigate()
+  const api = "https://api.multiavatar.com/";
+  const [avatars, setAvatars] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      console.clear();
+      const response = await fetch(`${api}${Math.round(Math.random() * 1000)}`);
+      const imageUrl = response.url;
+      setAvatars(imageUrl);
+      setIsLoading(true);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching image:", error);
+      // Handle error
     }
+  };
 
+  useEffect(() => {
+    fetchData();
+  }, []); // Fetch data on component mount
 
+  const saveAvatar = async () => {
+   
+    try {
+        
+    if (!localStorage.getItem('avatars')) {
+        return navigate('/login')       
+    }
+      const { data } = await axios.post(setAvatarRoute, {
+        username: user.username ,
+        avatar: avatars,
+      });
+      if (data.status === true) {
+        toast.success("Avatar saved successfully");
+      }
+      if (data.status === false) {
+        toast.success("Sorry some error Occured");
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+  useEffect(() => {
+    if (!user) {
+        navigate("/login")        
+    }
+  }, [user,navigate])
+  
 
-    
   return (
-    <div>
-        <input type="text" value={avatarName} onChange={(e) =>{setavatarName(e.target.value)}} />
-        <button onClick={fetchAvatar}>search</button>
-        {loader? <img src={Loader} alt="" />:<img src={imageurl}/>}
-    </div>
-  )
-}
+    <>
+      <div className={Styles.container}>
+        <div className={Styles.innerContainer}>
+          <h1>Pick your perfect avatar</h1>
+          <div className={Styles.avatarDiv}>
+            {isLoading ? (
+              <img src={loader} alt="" />
+            ) : (
+              <img src={`${avatars}.png`} alt="avatar" />
+            )}
+            <button className={Styles.retrybtn} onClick={fetchData}>
+              <i className="fa-solid fa-rotate-right"></i>
+            </button>
+          </div>
+          <button className={Styles.submitBtn} onClick={saveAvatar}>
+            Submit
+          </button>
+        </div>
+      </div>
+      <ToastContainer />
+    </>
+  );
+};
 
-export default SetAvatar
+export default SetAvatar;
