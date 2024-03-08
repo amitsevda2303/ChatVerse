@@ -24,6 +24,10 @@
     object-fit: contain;
 }
 .username{
+    /* text-align: center; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color:white;
 }
 .contacts{
@@ -33,9 +37,8 @@
     flex-direction: column;
     align-items: center;
     gap: 0.8rem;
-    
-   
-   
+    scroll-behavior: smooth;
+   overflow: auto;
     transition: .5s ease-in-out;
 }
 .avatar img{
@@ -50,6 +53,60 @@
     padding: .4rem;
     cursor: pointer;
     border-radius: 0.2rem;
-    min-height: 3rem;
+    min-height: 4rem;
+    /* text-align: center; */
     background-color: #ffffff39;
+}
+.contacts::-webkit-scrollbar {
+    cursor: pointer;
+  width: .2rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    cursor: pointer;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    cursor: pointer;
+  background: #9186f3;
+  border-radius: 1rem;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    cursor: pointer;
+  background: #0d0d30;
+}
+
+.selected{
+    background-color: #9186f3;
+}
+
+.currentUser{
+    width: 100%;
+    background-color: #0d0d30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+
+}
+
+.currentUser > .avatar > img{
+    height: 4rem;
+    max-inline-size: 100%;
+}
+
+.currentUser >.username >h2{
+    color: white;
+}
+
+
+@media screen and (min-width: 720px) and (max-width: 1080px) {
+    .username > h2{
+        font-size: 1rem;
+    }
+    
 }
