@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 // import Styles from "../Styles/Components/ChatContainer.module.css";
 // import ChatInput from "./ChatInput";
 import ChatInput from "./ChatInput";
@@ -45,19 +45,19 @@ const ChatContainer = ({ currentChat, socket, currentUser }) => {
     scrollRef.current?.scrollIntoView({ behaviour: "smooth" });
   }, [messages]);
 
-  const fetchChats = async () => {
-   if(currentChat) {
-    const response = await axios.post(getallMessaageRoute, {
-      from: currentUser._id,
-      to: currentChat._id,
-    });
-    setMessages(response.data);
-  }
-  };
-
+  const fetchChats = useCallback(async () => {
+    if(currentChat) {
+      const response = await axios.post(getallMessaageRoute, {
+        from: currentUser._id,
+        to: currentChat._id,
+      });
+      setMessages(response.data);
+    }
+  }, [currentChat, currentUser._id, setMessages]);
+  
   useEffect(() => {
     fetchChats();
-  }, [currentChat]);
+  }, [fetchChats]);
 
   return (
     <>
